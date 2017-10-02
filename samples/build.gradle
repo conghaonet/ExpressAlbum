@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    dataBinding {
+        enabled = true
+    }
+
     compileSdkVersion COMPILE_SDK_VERSION as Integer
     buildToolsVersion BUILD_TOOLS_VERSION as String
 
