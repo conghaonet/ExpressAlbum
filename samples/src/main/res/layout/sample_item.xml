@@ -21,6 +21,6 @@
             android:textColor="#ff0000"
             android:background="#AAAAAA"
             android:layout_margin="4dp"
-            android:text="@{item.str, default=aaaaa}"/>
+            android:text="@{item.str}"/>
     </LinearLayout>
 </layout>

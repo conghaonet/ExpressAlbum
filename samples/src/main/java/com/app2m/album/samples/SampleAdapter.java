@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_ITEM = 0;
-    private static final int TYPE_FOOTER = 1;
+    public static final int TYPE_FOOTER = 1;
     private final List<ItemVM> mData;
     private boolean hasFooter;
 
@@ -35,14 +35,14 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return holder;
         } else if(viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sample_footer, parent, false);
-            return new FootViewHolder(view);
+            return new FooterViewHolder(view);
         }
         return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof ItemViewHolder) {
+        if(position<mData.size() && holder instanceof ItemViewHolder) {
             ((ItemViewHolder)holder).binding.setVariable(BR.item, mData.get(position));
         }
     }
@@ -58,12 +58,19 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
+        return mData.isEmpty() ? 0 : mData.size() + 1;
+/*
         if(hasFooter) {
-            return mData.size() == 0 ? 0 : mData.size() + 1;
         } else {
             return mData.size();
         }
+*/
     }
+
+    public int getRealItemCount() {
+        return mData.size();
+    }
+
 
     public boolean isHasFooter() {
         return hasFooter;
@@ -71,6 +78,13 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void setHasFooter(boolean hasFooter) {
         this.hasFooter = hasFooter;
+        if(this.hasFooter) {
+//            this.notifyDataSetChanged();
+        } else {
+//            if(getRealItemCount() + 1 == getItemCount()) {
+//                this.notifyItemRemoved(getItemCount());
+//            }
+        }
     }
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -86,8 +100,8 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    static class FootViewHolder extends RecyclerView.ViewHolder {
-        public FootViewHolder(View view) {
+    static class FooterViewHolder extends RecyclerView.ViewHolder {
+        public FooterViewHolder(View view) {
             super(view);
         }
     }
