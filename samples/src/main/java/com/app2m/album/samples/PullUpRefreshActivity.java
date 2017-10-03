@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class PullUpRefreshActivity extends AppCompatActivity {
     private static final String TAG = PullUpRefreshActivity.class.getName();
     private SampleActivityPullUpRefreshBinding mBinding;
-    private static final int ROWS_LIMIT = 6;
+    private static final int ROWS_LIMIT = 20;
     private static final int GRID_SPAN_COUNT = 3;
     private SampleAdapter adapter;
     private final List<ItemVM> mData = new ArrayList<>();
@@ -32,8 +33,9 @@ public class PullUpRefreshActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.sample_activity_pull_up_refresh);
         mBinding.setActivity(this);
         adapter = new SampleAdapter(mData);
-        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+//        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 //        layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
+        layoutManager = new StaggeredGridLayoutManager(GRID_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL);
         if(layoutManager instanceof GridLayoutManager) {
             ((GridLayoutManager)layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
@@ -57,24 +59,19 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                if(dy >= 0 && !mBinding.swipeRefreshLayout.isRefreshing() && !isLoading && adapter.getItemCount()>0 && adapter.getRealItemCount() == adapter.getItemCount() && !adapter.isHasFooter()) {
                 int lastPosition = -1;
                 if (layoutManager instanceof LinearLayoutManager) {
                     lastPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                } else if(layoutManager instanceof StaggeredGridLayoutManager) {
+                    //因为StaggeredGridLayoutManager的特殊性可能导致最后显示的item存在多个，所以这里取到的是一个数组
+                    //得到这个数组后再取到数组中position值最大的那个就是最后显示的position值了
+                    int[] lastPositions = new int[((StaggeredGridLayoutManager) layoutManager).getSpanCount()];
+                    ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(lastPositions);
+                    lastPosition = findMax(lastPositions);
                 }
-                if(dy == 0) {
-                    if (lastPosition >= 0 && (lastPosition + 1 == adapter.getItemCount())) {
-                        Log.d(TAG, "onScrolled dy = " + dy);
-                        adapter.setHasFooter(true);
-                        loadData(mData.size());
-                    }
-                }
-                if(dy > 0 && !isLoading && adapter.getRealItemCount() > 0) {
-                    if (lastPosition >= 0 && (lastPosition + 1 == adapter.getItemCount())) {
-                        Log.d(TAG, "onScrolled dy = " + dy);
-                        adapter.setHasFooter(true);
-                        loadData(mData.size());
-                    }
+                if(dy >= 0 && !isLoading && SampleAdapter.TYPE_FOOTER == adapter.getItemViewType(lastPosition)) {
+                    Log.d(TAG, "onScrolled dy = " + dy);
+                    loadData(mData.size());
                 }
             }
         });
@@ -90,6 +87,16 @@ public class PullUpRefreshActivity extends AppCompatActivity {
         });
         mBinding.swipeRefreshLayout.setRefreshing(true);
         loadData(0);
+    }
+    //找到数组中的最大值
+    private int findMax(int[] lastPositions) {
+        int max = lastPositions[0];
+        for (int value : lastPositions) {
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
     }
 
     private void loadData(final int offset) {
@@ -126,14 +133,12 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         } else if(offset > 0 && list.isEmpty()) {
             Toast.makeText(this, "No more data.", Toast.LENGTH_SHORT).show();
-//            adapter.setHasFooter(false);
             adapter.notifyItemRemoved(adapter.getItemCount());
         } else {
             for(String str: list) {
                 ItemVM itemVM = new ItemVM(str);
                 mData.add(itemVM);
             }
-//            adapter.setHasFooter(false);
             adapter.notifyDataSetChanged();
         }
         mBinding.swipeRefreshLayout.setRefreshing(false);
