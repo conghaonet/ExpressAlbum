@@ -3,6 +3,7 @@ package com.app2m.album.samples;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -20,16 +21,16 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_ITEM = 0;
     public static final int TYPE_FOOTER = 1;
     private final List<ItemVM> mData;
-    private View footerView;
+    private int footerLayoutId;
     private Context mContext;
 
-    public SampleAdapter(List<ItemVM> data) {
+    public SampleAdapter(Context context, List<ItemVM> data) {
+        this.mContext = context;
         this.mData = data;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(mContext == null) mContext = parent.getContext();
         if (viewType == TYPE_ITEM) {
             ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.sample_item, parent, false);
             //添加监听器
@@ -38,37 +39,61 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.setBinding(binding);
             return holder;
         } else if(viewType == TYPE_FOOTER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sample_footer, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(footerLayoutId, parent, false);
             return new FooterViewHolder(view);
-//            return new FooterViewHolder(footerView);
         }
         return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(position<mData.size() && holder instanceof ItemViewHolder) {
+        if(position < mData.size() && holder instanceof ItemViewHolder) {
             ((ItemViewHolder)holder).binding.setVariable(BR.item, mData.get(position));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-
-        if (position + 1 == getItemCount()) {
-            return TYPE_FOOTER;
+        if(footerLayoutId > 0) {
+            if (position + 1 == getItemCount()) {
+                return TYPE_FOOTER;
+            } else {
+                return TYPE_ITEM;
+            }
         } else {
             return TYPE_ITEM;
         }
     }
 
     public void setDefaultFooterView() {
-        footerView = LayoutInflater.from(mContext).inflate(R.layout.sample_footer, null, false);
+        setCustomFooterView(R.layout.sample_footer);
+    }
+
+    public void setCustomFooterView(@LayoutRes int footerLayoutId) {
+        if(this.footerLayoutId != footerLayoutId) {
+            this.footerLayoutId = footerLayoutId;
+            if(!mData.isEmpty()) {
+                notifyItemInserted(getItemCount());
+            }
+        }
+    }
+
+
+
+    public void removeFooterView() {
+        if(footerLayoutId > 0) {
+            footerLayoutId = 0;
+            notifyItemRemoved(getItemCount());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mData.isEmpty() ? 0 : mData.size() + 1;
+        if(footerLayoutId > 0) {
+            return mData.isEmpty() ? 0 : mData.size() + 1;
+        } else {
+            return mData.size();
+        }
     }
 
     public int getRealItemCount() {
@@ -99,6 +124,19 @@ public class SampleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    public void onItemClick(View view, ItemVM itemVM) {
+        if(onItemClickListener != null) {
+            onItemClickListener.onItemClick(view, itemVM);
+        }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+    public OnItemClickListener onItemClickListener;
+    public interface OnItemClickListener {
+        void onItemClick(View view, ItemVM itemVM);
+    }
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
         public ItemViewHolder(View itemView) {

@@ -12,7 +12,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:clickable="true"
+        android:onClick="@{(v) -> adapter.onItemClick(v, item)}"
+        >
+<!--
+        android:clickable="true"
+        android:onClick="@{(v) -> adapter.onItemClick(v, item)}"
+-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
