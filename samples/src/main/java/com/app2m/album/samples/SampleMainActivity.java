@@ -22,4 +22,7 @@ public class SampleMainActivity extends AppCompatActivity {
     public void onClickLoadMore(View view) {
         startActivity(new Intent(this, PullUpRefreshActivity.class));
     }
+    public void onClickRecyclerViewExt(View view) {
+        startActivity(new Intent(this, RecyclerViewExtActivity.class));
+    }
 }

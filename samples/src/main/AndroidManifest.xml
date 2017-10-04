@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".PullUpRefreshActivity">
         </activity>
+        <activity android:name=".RecyclerViewExtActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -27,7 +27,7 @@ public class PullUpRefreshActivity extends AppCompatActivity {
     private static final int GRID_SPAN_COUNT = 3;
     private SampleAdapter mAdapter;
     private final List<ItemVM> mData = new ArrayList<>();
-    boolean mIsLoading;
+    private boolean mIsLoading;
     private float mActionDownY;
     private boolean mIsScrollUp;
     private boolean mIsControlledOnScrollStateChanged;
