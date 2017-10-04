@@ -92,8 +92,10 @@ public class PullUpRefreshActivity extends AppCompatActivity {
                 if(dy > 0) {
                     mIsControlledOnScrollStateChanged = true;
                     mIsScrollUp = true;
-                } else {
+                } else if( dy == 0) {
                     mIsControlledOnScrollStateChanged = false;
+                } else {
+                    mIsControlledOnScrollStateChanged = true;
                     mIsScrollUp = false;
                 }
             }
