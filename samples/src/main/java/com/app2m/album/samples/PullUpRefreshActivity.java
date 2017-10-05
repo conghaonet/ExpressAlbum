@@ -23,7 +23,7 @@ import java.util.List;
 public class PullUpRefreshActivity extends AppCompatActivity {
     private static final String TAG = PullUpRefreshActivity.class.getName();
     private SampleActivityPullUpRefreshBinding mBinding;
-    private static final int ROWS_LIMIT = 13;
+    private static final int ROWS_LIMIT = 3;
     private static final int GRID_SPAN_COUNT = 3;
     private SampleAdapter mAdapter;
     private final List<ItemVM> mData = new ArrayList<>();
@@ -31,6 +31,7 @@ public class PullUpRefreshActivity extends AppCompatActivity {
     private float mActionDownY;
     private boolean mIsScrollUp;
     private boolean mIsControlledOnScrollStateChanged;
+    private int mAmountOfVerticalScroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,9 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if(mAmountOfVerticalScroll > 0) {
+                    mAdapter.setDefaultFooterView();
+                }
                 if(RecyclerView.SCROLL_STATE_IDLE == newState && mIsScrollUp && mIsControlledOnScrollStateChanged) {
                     executePullUp();
                 }
@@ -89,11 +93,13 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                mAmountOfVerticalScroll = dy;
                 if(dy > 0) {
                     mIsControlledOnScrollStateChanged = true;
                     mIsScrollUp = true;
                 } else if( dy == 0) {
                     mIsControlledOnScrollStateChanged = false;
+                    mIsScrollUp = false;
                 } else {
                     mIsControlledOnScrollStateChanged = true;
                     mIsScrollUp = false;
@@ -114,9 +120,10 @@ public class PullUpRefreshActivity extends AppCompatActivity {
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            if (mActionDownY - event.getY() > 0) { //向上滑动
+                            mAmountOfVerticalScroll = (int)(mActionDownY - event.getY());
+                            if (mAmountOfVerticalScroll > 0) { //向上滑动
+                                mAdapter.setDefaultFooterView();
                                 mIsScrollUp = true;
-//                                mAdapter.setCustomFooterView(R.layout.sample_footer_b);
                                 if (!mIsLoading) {
                                     executePullUp();
                                 }
@@ -167,12 +174,15 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             lastPosition = findMax(lastPositions);
         }
         //不满一屏时，自动加载更多。
-        if(mIsScrollUp && !mIsLoading && lastPosition + 1 == mAdapter.getItemCount()) {
-            mAdapter.setDefaultFooterView();
+        if(mIsScrollUp && !mIsLoading && (lastPosition + 1 == mAdapter.getItemCount() || (!mIsControlledOnScrollStateChanged && lastPosition + 2 == mAdapter.getItemCount()))) {
+//            mAdapter.setDefaultFooterView();
             loadData(mData.size());
         }
     }
     private void loadData(final int offset) {
+        if(mIsLoading) {
+            return;
+        }
         mIsLoading = true;
         new Thread(new Runnable() {
             @Override
@@ -181,7 +191,7 @@ public class PullUpRefreshActivity extends AppCompatActivity {
                     int indexTo = offset ==0 ? ROWS_LIMIT : mData.size()+ROWS_LIMIT;
                     if(indexTo > SampleConstant.TESTING_ARRAY.length) indexTo = SampleConstant.TESTING_ARRAY.length;
                     final String[] result = Arrays.copyOfRange(SampleConstant.TESTING_ARRAY, offset, indexTo);
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
