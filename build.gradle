@@ -17,8 +17,6 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
-
-    group = MAVEN_GROUP
 }
 
 task clean(type: Delete) {
