@@ -162,8 +162,8 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(lastPositions);
             lastPosition = findMax(lastPositions);
         }
-        //不满一屏时，自动加载更多。
-        if(!mIsLoading && (lastPosition + 1 == mAdapter.getItemCount() || (!mIsControlledOnScrollStateChanged && lastPosition + 2 == mAdapter.getItemCount()))) {
+
+        if(!mIsLoading && (!mIsControlledOnScrollStateChanged || lastPosition + 1 == mAdapter.getItemCount())) {
             loadData(mData.size());
         }
     }
