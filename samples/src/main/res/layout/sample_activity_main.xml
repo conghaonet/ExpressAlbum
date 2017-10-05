@@ -18,6 +18,13 @@
             android:textAllCaps="false"
             android:onClick="@{(v) -> activity.onClickRecyclerViewExt(v)}"
             />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SampleAlbum"
+            android:textAllCaps="false"
+            android:onClick="@{(v) -> activity.onClickSampleAlbum(v)}"
+            />
 
     </LinearLayout>
 
