@@ -34,4 +34,5 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
     compile "com.android.support:recyclerview-v7:${ANDROID_SUPPORT_VERSION}"
+    compile 'com.github.conghaonet:RecyclerViewExt:0.1'
 }

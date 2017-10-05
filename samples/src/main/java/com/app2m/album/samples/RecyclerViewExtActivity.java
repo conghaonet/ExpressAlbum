@@ -78,7 +78,6 @@ public class RecyclerViewExtActivity extends AppCompatActivity {
             @Override
             public void onScrollUp() {
                 mAdapter.setDefaultFooterView();
-                mAdapter.setCustomFooterView(R.layout.sample_footer_b);
             }
             @Override
             public void onLastItemVisible(int lastPosition) {
