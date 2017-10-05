@@ -5,7 +5,7 @@
     <data>
         <variable
             name="activity"
-            type="com.app2m.album.samples.RecyclerViewExtActivity"/>
+            type="com.app2m.samples.recyclerview.RecyclerViewExtActivity"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"

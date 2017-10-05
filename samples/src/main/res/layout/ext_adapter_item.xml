@@ -3,10 +3,10 @@
     <data>
         <variable
             name="adapter"
-            type="com.app2m.album.samples.MyExtAdapter"/>
+            type="com.app2m.samples.recyclerview.MyExtAdapter"/>
         <variable
             name="item"
-            type="com.app2m.album.samples.ItemVM"/>
+            type="com.app2m.samples.recyclerview.ItemVM"/>
     </data>
     <LinearLayout
         android:orientation="vertical"

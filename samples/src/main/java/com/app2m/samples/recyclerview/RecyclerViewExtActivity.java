@@ -1,4 +1,4 @@
-package com.app2m.album.samples;
+package com.app2m.samples.recyclerview;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.IdRes;
@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.app2m.album.samples.databinding.ActivityRecyclerViewExtBinding;
+import com.app2m.samples.R;
+import com.app2m.samples.SampleConstant;
+import com.app2m.samples.databinding.ActivityRecyclerViewExtBinding;
 import com.app2m.widget.recyclerview.RecyclerViewExt;
 
 import java.util.ArrayList;

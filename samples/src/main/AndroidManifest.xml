@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.app2m.album.samples">
+          package="com.app2m.samples">
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RecyclerViewExtActivity">
+        <activity android:name=".recyclerview.RecyclerViewExtActivity">
         </activity>
     </application>
 

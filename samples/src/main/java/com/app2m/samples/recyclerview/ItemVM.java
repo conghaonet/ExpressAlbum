@@ -1,4 +1,4 @@
-package com.app2m.album.samples;
+package com.app2m.samples.recyclerview;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;

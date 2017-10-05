@@ -1,6 +1,5 @@
-package com.app2m.album.samples;
+package com.app2m.samples.recyclerview;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app2m.samples.BR;
+import com.app2m.samples.R;
 import com.app2m.widget.recyclerview.RecyclerViewExtAdapter;
 
 import java.util.List;

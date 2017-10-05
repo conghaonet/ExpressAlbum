@@ -1,13 +1,13 @@
-package com.app2m.album.samples;
+package com.app2m.samples;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.app2m.album.samples.databinding.SampleActivityMainBinding;
+import com.app2m.samples.databinding.SampleActivityMainBinding;
+import com.app2m.samples.recyclerview.RecyclerViewExtActivity;
 
 public class SampleMainActivity extends AppCompatActivity {
     private SampleActivityMainBinding mBinding;

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="activity"
-            type="com.app2m.album.samples.SampleMainActivity"/>
+            type="com.app2m.samples.SampleMainActivity"/>
     </data>
 
     <LinearLayout

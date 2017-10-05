@@ -1,4 +1,4 @@
-package com.app2m.album.samples;
+package com.app2m.samples;
 
 /**
  * Created by CongHao on 2017/10/2.
