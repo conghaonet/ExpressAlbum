@@ -23,13 +23,12 @@ import java.util.List;
 public class PullUpRefreshActivity extends AppCompatActivity {
     private static final String TAG = PullUpRefreshActivity.class.getName();
     private SampleActivityPullUpRefreshBinding mBinding;
-    private static final int ROWS_LIMIT = 3;
+    private static final int ROWS_LIMIT = 15;
     private static final int GRID_SPAN_COUNT = 3;
     private SampleAdapter mAdapter;
     private final List<ItemVM> mData = new ArrayList<>();
     private boolean mIsLoading;
     private float mActionDownY;
-    private boolean mIsScrollUp;
     private boolean mIsControlledOnScrollStateChanged;
     private int mAmountOfVerticalScroll;
 
@@ -86,7 +85,7 @@ public class PullUpRefreshActivity extends AppCompatActivity {
                 if(mAmountOfVerticalScroll > 0) {
                     mAdapter.setDefaultFooterView();
                 }
-                if(RecyclerView.SCROLL_STATE_IDLE == newState && mIsScrollUp && mIsControlledOnScrollStateChanged) {
+                if(RecyclerView.SCROLL_STATE_IDLE == newState && mIsControlledOnScrollStateChanged && mAmountOfVerticalScroll > 0) {
                     executePullUp();
                 }
             }
@@ -94,15 +93,10 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mAmountOfVerticalScroll = dy;
-                if(dy > 0) {
+                if(dy != 0) {
                     mIsControlledOnScrollStateChanged = true;
-                    mIsScrollUp = true;
-                } else if( dy == 0) {
-                    mIsControlledOnScrollStateChanged = false;
-                    mIsScrollUp = false;
                 } else {
-                    mIsControlledOnScrollStateChanged = true;
-                    mIsScrollUp = false;
+                    mIsControlledOnScrollStateChanged = false;
                 }
             }
         });
@@ -123,12 +117,7 @@ public class PullUpRefreshActivity extends AppCompatActivity {
                             mAmountOfVerticalScroll = (int)(mActionDownY - event.getY());
                             if (mAmountOfVerticalScroll > 0) { //向上滑动
                                 mAdapter.setDefaultFooterView();
-                                mIsScrollUp = true;
-                                if (!mIsLoading) {
-                                    executePullUp();
-                                }
-                            } else {
-                                mIsScrollUp = false;
+                                executePullUp();
                             }
                             mActionDownY = -1;
                             break;
@@ -174,8 +163,7 @@ public class PullUpRefreshActivity extends AppCompatActivity {
             lastPosition = findMax(lastPositions);
         }
         //不满一屏时，自动加载更多。
-        if(mIsScrollUp && !mIsLoading && (lastPosition + 1 == mAdapter.getItemCount() || (!mIsControlledOnScrollStateChanged && lastPosition + 2 == mAdapter.getItemCount()))) {
-//            mAdapter.setDefaultFooterView();
+        if(!mIsLoading && (lastPosition + 1 == mAdapter.getItemCount() || (!mIsControlledOnScrollStateChanged && lastPosition + 2 == mAdapter.getItemCount()))) {
             loadData(mData.size());
         }
     }
