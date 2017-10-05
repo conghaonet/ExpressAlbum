@@ -1,1 +1,1 @@
-include ':samples', ':album'
+include ':samples', ':album', ':ext_recycler_view'

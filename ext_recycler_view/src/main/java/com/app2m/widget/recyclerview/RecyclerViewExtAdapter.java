@@ -1,4 +1,4 @@
-package com.app2m.widget;
+package com.app2m.widget.recyclerview;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
@@ -6,9 +6,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.app2m.album.samples.R;
-import com.app2m.album.samples.SampleAdapter;
 
 /**
  * Created by CongHao on 2017/10/4.

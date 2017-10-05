@@ -43,7 +43,7 @@
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.app2m.widget.RecyclerViewExt
+            <com.app2m.widget.recyclerview.RecyclerViewExt
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

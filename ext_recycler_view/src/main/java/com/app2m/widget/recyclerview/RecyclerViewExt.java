@@ -1,4 +1,4 @@
-package com.app2m.widget;
+package com.app2m.widget.recyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -90,7 +90,7 @@ public class RecyclerViewExt extends RecyclerView {
         this.setOnTouchListener(mOnTouchListener);
     }
     private void findLastItem() {
-        RecyclerView.LayoutManager layoutManager = getLayoutManager();
+        LayoutManager layoutManager = getLayoutManager();
         int lastPosition = -1;
         if (layoutManager instanceof LinearLayoutManager) {
             lastPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();

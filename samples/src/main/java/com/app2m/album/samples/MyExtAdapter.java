@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app2m.widget.RecyclerViewExtAdapter;
+import com.app2m.widget.recyclerview.RecyclerViewExtAdapter;
 
 import java.util.List;
 
@@ -18,11 +18,9 @@ import java.util.List;
  */
 
 public class MyExtAdapter extends RecyclerViewExtAdapter<RecyclerView.ViewHolder> {
-    private Context mContext;
     private final List<ItemVM> mData;
 
-    public MyExtAdapter(Context context, List<ItemVM> data) {
-        mContext = context;
+    public MyExtAdapter(List<ItemVM> data) {
         mData = data;
     }
 

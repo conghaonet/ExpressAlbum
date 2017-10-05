@@ -14,7 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.app2m.album.samples.databinding.ActivityRecyclerViewExtBinding;
-import com.app2m.widget.RecyclerViewExt;
+import com.app2m.widget.recyclerview.RecyclerViewExt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class RecyclerViewExtActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_recycler_view_ext);
         mBinding.setActivity(this);
-        mAdapter = new MyExtAdapter(this, mData);
+        mAdapter = new MyExtAdapter(mData);
         mAdapter.setOnItemClickListener(new MyExtAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, ItemVM itemVM) {
