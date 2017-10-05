@@ -18,8 +18,9 @@ public class RecyclerViewExt extends RecyclerView {
     private boolean mIsScrollUp;
     private boolean mIsControlledOnScrollStateChanged;
     private float mActionDownY;
-    private OnLastItemVisibleListener mOnLastItemVisibleListener;
+    private OnExtScrollListener mOnExtScrollListener;
     private OnTouchListener mOnTouchListener;
+    private int mAmountOfVerticalScroll;
 
     public RecyclerViewExt(Context context) {
         this(context, (AttributeSet)null);
@@ -35,21 +36,22 @@ public class RecyclerViewExt extends RecyclerView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(RecyclerView.SCROLL_STATE_IDLE == newState && mIsScrollUp && mIsControlledOnScrollStateChanged) {
+                if(mAmountOfVerticalScroll > 0) {
+                    if(mOnExtScrollListener != null) {
+                        mOnExtScrollListener.onScrollUp();
+                    }                }
+                if(RecyclerView.SCROLL_STATE_IDLE == newState && mIsControlledOnScrollStateChanged && mAmountOfVerticalScroll > 0) {
                     findLastItem();
                 }
             }
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy > 0) {
+                mAmountOfVerticalScroll = dy;
+                if(dy != 0) {
                     mIsControlledOnScrollStateChanged = true;
-                    mIsScrollUp = true;
-                } else if( dy == 0) {
-                    mIsControlledOnScrollStateChanged = false;
                 } else {
-                    mIsControlledOnScrollStateChanged = true;
-                    mIsScrollUp = false;
+                    mIsControlledOnScrollStateChanged = false;
                 }
             }
         };
@@ -68,11 +70,12 @@ public class RecyclerViewExt extends RecyclerView {
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            if (mActionDownY - event.getY() > 0) { //向上滑动
-                                mIsScrollUp = true;
+                            mAmountOfVerticalScroll = (int)(mActionDownY - event.getY());
+                            if (mAmountOfVerticalScroll > 0) { //向上滑动
+                                if(mOnExtScrollListener != null) {
+                                    mOnExtScrollListener.onScrollUp();
+                                }
                                 findLastItem();
-                            } else {
-                                mIsScrollUp = false;
                             }
                             mActionDownY = -1;
                             break;
@@ -99,12 +102,10 @@ public class RecyclerViewExt extends RecyclerView {
             lastPosition = findMax(lastPositions);
         }
         //不满一屏时，自动加载更多。
-        if(mIsScrollUp && lastPosition + 1 == this.getAdapter().getItemCount()) {
-            if(mOnLastItemVisibleListener != null) {
-                mOnLastItemVisibleListener.onLastItemVisible(lastPosition);
+        if(!mIsControlledOnScrollStateChanged || lastPosition + 1 == this.getAdapter().getItemCount()) {
+            if(mOnExtScrollListener != null) {
+                mOnExtScrollListener.onLastItemVisible(lastPosition);
             }
-//            mAdapter.setDefaultFooterView();
-//            loadData(mData.size());
         }
     }
     //当LayoutManager为StaggeredGridLayoutManager时，找到数组中的最大值
@@ -118,10 +119,11 @@ public class RecyclerViewExt extends RecyclerView {
         return max;
     }
 
-    public void setOnLastItemVisibleListener(OnLastItemVisibleListener onLastItemVisibleListener) {
-        this.mOnLastItemVisibleListener = onLastItemVisibleListener;
+    public void setOnExtScrollListener(OnExtScrollListener onExtScrollListener) {
+        this.mOnExtScrollListener = onExtScrollListener;
     }
-    public interface OnLastItemVisibleListener {
+    public interface OnExtScrollListener {
+        void onScrollUp();
         void onLastItemVisible(int lastItemPosition);
     }
 

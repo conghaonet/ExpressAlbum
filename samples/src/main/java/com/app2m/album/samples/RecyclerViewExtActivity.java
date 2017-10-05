@@ -22,7 +22,7 @@ import java.util.List;
 
 public class RecyclerViewExtActivity extends AppCompatActivity {
     private ActivityRecyclerViewExtBinding mBinding;
-    private static final int ROWS_LIMIT = 10;
+    private static final int ROWS_LIMIT = 5;
     private static final int GRID_SPAN_COUNT = 3;
     private MyExtAdapter mAdapter;
     private final List<ItemVM> mData = new ArrayList<>();
@@ -74,22 +74,21 @@ public class RecyclerViewExtActivity extends AppCompatActivity {
         });
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mBinding.recyclerView.setAdapter(mAdapter);
-        mBinding.recyclerView.setOnLastItemVisibleListener(new RecyclerViewExt.OnLastItemVisibleListener() {
+        mBinding.recyclerView.setOnExtScrollListener(new RecyclerViewExt.OnExtScrollListener() {
+            @Override
+            public void onScrollUp() {
+                mAdapter.setDefaultFooterView();
+            }
             @Override
             public void onLastItemVisible(int lastPosition) {
-                if(!mIsLoading) {
-                    mAdapter.setDefaultFooterView();
-                    loadData(mData.size());
-                }
+                loadData(mData.size());
             }
         });
         mBinding.swipeRefreshLayout.setColorSchemeResources(SampleConstant.SWIPE_REFRESHING_COLORS);
         mBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!mIsLoading) {
-                    loadData(0);
-                }
+                loadData(0);
             }
         });
         mBinding.swipeRefreshLayout.setRefreshing(true);
@@ -97,6 +96,9 @@ public class RecyclerViewExtActivity extends AppCompatActivity {
     }
 
     private void loadData(final int offset) {
+        if(mIsLoading) {
+            return;
+        }
         mIsLoading = true;
         new Thread(new Runnable() {
             @Override
@@ -105,7 +107,7 @@ public class RecyclerViewExtActivity extends AppCompatActivity {
                     int indexTo = offset ==0 ? ROWS_LIMIT : mData.size()+ROWS_LIMIT;
                     if(indexTo > SampleConstant.TESTING_ARRAY.length) indexTo = SampleConstant.TESTING_ARRAY.length;
                     final String[] result = Arrays.copyOfRange(SampleConstant.TESTING_ARRAY, offset, indexTo);
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
