@@ -68,7 +68,7 @@ public abstract class RecyclerViewExtAdapter<VH extends RecyclerView.ViewHolder>
     public abstract int getRealItemViewType(int position);
 
     public void setDefaultFooterView() {
-        setCustomFooterView(R.layout.sample_footer);
+        setCustomFooterView(R.layout.app2m_ext_recycler_view_default_footer);
     }
 
     public void setCustomFooterView(@LayoutRes int footerLayoutId) {
