@@ -45,10 +45,25 @@ public class AlbumUtil {
     }
 
     public static void getAllMedias(Context context) {
+        SparseArray<MediaBean> images = getAllImages(context);
+        SparseArray<MediaBean> videos = getAllVideos(context);
+
+/*
+        for(int i=0; i<videos.size(); i++) {
+            VideoBean videoBean = (VideoBean) videos.valueAt(i);
+            for(int j=0; j<images.size(); j++) {
+                ImageBean imageBean = (ImageBean)images.valueAt(j);
+                if(videoBean.getLastModified().getTime() >= imageBean.getLastModified().getTime()) {
+                }
+
+            }
+        }
+*/
+
 
     }
-    public static SparseArray<ImageBean> getAllImages(Context context) {
-        SparseArray<ImageBean> saImages = null;
+    public static SparseArray<MediaBean> getAllImages(Context context) {
+        SparseArray<MediaBean> saImages = null;
         Uri externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projections = {MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DATA,
@@ -81,7 +96,7 @@ public class AlbumUtil {
 
             //TODO: for debug
             for(int i=0; i<saImages.size(); i++) {
-                ImageBean bean = saImages.valueAt(i);
+                ImageBean bean = (ImageBean)saImages.valueAt(i);
                 if(!TextUtils.isEmpty(bean.getThumbnailData())) {
                     Log.d("getAllImages", "data = " + bean.getData());
                     Log.d("getAllImages", "thumbnail = " + bean.getThumbnailData());
@@ -89,11 +104,11 @@ public class AlbumUtil {
             }
 
         }
-        return saImages != null ? saImages : new SparseArray<ImageBean>();
+        return saImages != null ? saImages : new SparseArray<MediaBean>();
     }
 
-    public static SparseArray<VideoBean> getAllVideos(Context context) {
-        SparseArray<VideoBean> saVideos = null;
+    public static SparseArray<MediaBean> getAllVideos(Context context) {
+        SparseArray<MediaBean> saVideos = null;
         Uri externalContentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String[] projections = {MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DATA,
@@ -133,14 +148,15 @@ public class AlbumUtil {
 
             //TODO: for debug
             for(int i=0; i<saVideos.size(); i++) {
-                VideoBean bean = saVideos.valueAt(i);
+                VideoBean bean = (VideoBean)saVideos.valueAt(i);
                 if(!TextUtils.isEmpty(bean.getThumbnailData())) {
                     Log.d("getAllVideos", "data = " + bean.getData());
                     Log.d("getAllVideos", "thumbnail = " + bean.getThumbnailData());
+                    Log.d("getAllVideos", "duration = " + bean.getDuration());
                 }
             }
         }
-        return saVideos != null ? saVideos : new SparseArray<VideoBean>();
+        return saVideos != null ? saVideos : new SparseArray<MediaBean>();
     }
 
     private static void setMediasThumbnail(Context context, SparseArray<? extends MediaBean> medias) {
