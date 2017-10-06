@@ -22,4 +22,22 @@ public class SampleAlbumActivity extends AppCompatActivity {
             }
         }).start();
     }
+    public void onClickAlbumUtiGetAllImages(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AlbumUtil.getAllImages(getApplicationContext());
+            }
+        }).start();
+    }
+    public void onClickAlbumUtiGetAllVideos(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AlbumUtil.getAllVideos(getApplicationContext());
+            }
+        }).start();
+    }
+
+
 }

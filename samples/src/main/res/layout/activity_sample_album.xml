@@ -9,4 +9,18 @@
         android:text="AlbumUtil.getAllFolders"
         android:textAllCaps="false"
         android:onClick="onClickAlbumUtilGetAllFolder"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AlbumUtil.getAllImages"
+        android:textAllCaps="false"
+        android:onClick="onClickAlbumUtiGetAllImages"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AlbumUtil.getAllVideos"
+        android:textAllCaps="false"
+        android:onClick="onClickAlbumUtiGetAllVideos"/>
+
+
 </LinearLayout>
