@@ -52,7 +52,7 @@ public class AlbumUtil {
         List<MediaBean> images = getAllImages(context);
         List<MediaBean> videos = getAllVideos(context);
 
-        List<MediaBean> list = new ArrayList<>();
+        List<MediaBean> list = new ArrayList<>(images.size() + videos.size());
         list.addAll(images);
         list.addAll(videos);
         Collections.sort(list, new SortByModifiedDesc());
@@ -69,23 +69,18 @@ public class AlbumUtil {
         folderBeanVideo.setType(MediaFolderBean.TYPE_MIX);
         folders.add(folderBeanAll);
 
+
+
         return folders;
 
     }
     public static List<MediaBean> getAllMedias(Context context) {
-        List<MediaBean> list = new ArrayList<>();
-/*
         List<MediaBean> images = getAllImages(context);
         List<MediaBean> videos = getAllVideos(context);
-
-        for (int i=0; i<images.size(); i++) {
-            list.add(images.valueAt(i));
-        }
-        for (int i=0; i<videos.size(); i++) {
-            list.add(videos.valueAt(i));
-        }
+        List<MediaBean> list = new ArrayList<>(images.size() + videos.size());
+        list.addAll(images);
+        list.addAll(videos);
         Collections.sort(list, new SortByModifiedDesc());
-*/
 /*
         for(MediaBean bean : list) {
             if(bean instanceof VideoBean) {
@@ -204,6 +199,10 @@ public class AlbumUtil {
             }
         }
         return list;
+    }
+
+    private static void setImages2Folder(List<MediaBean> ima) {
+
     }
 
     private static void setMediasThumbnail(Context context, SparseArray<? extends MediaBean> medias) {
