@@ -18,7 +18,7 @@ public class MediaBean implements Serializable {
      */
     private int size;
     private String mimeType;
-    private Date lastModified;
+    private Date dateModified;
 
     public int getId() {
         return id;
@@ -68,12 +68,12 @@ public class MediaBean implements Serializable {
         this.mimeType = mimeType;
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public Date getDateModified() {
+        return dateModified;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 
     @Override

@@ -14,11 +14,11 @@ public class SampleAlbumActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sample_album);
     }
 
-    public void onClickAlbumUtilGetAllFolder(View view) {
+    public void onClickAlbumUtilGetAllMediasByFolder(View view) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AlbumUtil.getAllFolders(getApplicationContext());
+                AlbumUtil.getAllMediasByFolder(getApplicationContext());
             }
         }).start();
     }

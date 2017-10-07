@@ -8,7 +8,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by CongHao on 2017/10/6.
@@ -44,26 +47,60 @@ public class AlbumUtil {
         }
     }
 
-    public static void getAllMedias(Context context) {
-        SparseArray<MediaBean> images = getAllImages(context);
-        SparseArray<MediaBean> videos = getAllVideos(context);
+    public static List<MediaFolderBean> getAllMediasByFolder(Context context) {
+        List<MediaFolderBean> folders = new ArrayList<>();
+        List<MediaBean> images = getAllImages(context);
+        List<MediaBean> videos = getAllVideos(context);
 
+        List<MediaBean> list = new ArrayList<>();
+        list.addAll(images);
+        list.addAll(videos);
+        Collections.sort(list, new SortByModifiedDesc());
+
+        MediaFolderBean folderBeanAll = new MediaFolderBean();
+        folderBeanAll.setFolderName("图片和视频");
+        folderBeanAll.setMedias(list);
+        folderBeanAll.setType(MediaFolderBean.TYPE_MIX);
+        folders.add(folderBeanAll);
+
+        MediaFolderBean folderBeanVideo = new MediaFolderBean();
+        folderBeanVideo.setFolderName("图片和视频");
+        folderBeanVideo.setMedias(videos);
+        folderBeanVideo.setType(MediaFolderBean.TYPE_MIX);
+        folders.add(folderBeanAll);
+
+        return folders;
+
+    }
+    public static List<MediaBean> getAllMedias(Context context) {
+        List<MediaBean> list = new ArrayList<>();
 /*
-        for(int i=0; i<videos.size(); i++) {
-            VideoBean videoBean = (VideoBean) videos.valueAt(i);
-            for(int j=0; j<images.size(); j++) {
-                ImageBean imageBean = (ImageBean)images.valueAt(j);
-                if(videoBean.getLastModified().getTime() >= imageBean.getLastModified().getTime()) {
-                }
+        List<MediaBean> images = getAllImages(context);
+        List<MediaBean> videos = getAllVideos(context);
 
+        for (int i=0; i<images.size(); i++) {
+            list.add(images.valueAt(i));
+        }
+        for (int i=0; i<videos.size(); i++) {
+            list.add(videos.valueAt(i));
+        }
+        Collections.sort(list, new SortByModifiedDesc());
+*/
+/*
+        for(MediaBean bean : list) {
+            if(bean instanceof VideoBean) {
+                VideoBean videoBean = (VideoBean) bean;
+                Log.d("getAllMedias", "data = " + videoBean.getData());
+                Log.d("getAllMedias", "duration = " + videoBean.getDuration());
+                Log.d("getAllMedias", "resolution = " + videoBean.getResolution());
             }
         }
 */
-
-
+        return list;
     }
-    public static SparseArray<MediaBean> getAllImages(Context context) {
-        SparseArray<MediaBean> saImages = null;
+    public static List<MediaBean> getAllImages(Context context) {
+        List<MediaBean> list = new ArrayList<>(0);
+        SparseArray<MediaBean> saImages;
         Uri externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projections = {MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DATA,
@@ -72,7 +109,7 @@ public class AlbumUtil {
                 MediaStore.Images.Media.MIME_TYPE,
                 MediaStore.Images.Media.DATE_MODIFIED
         };
-        Cursor cursor = context.getContentResolver().query(externalContentUri, projections, null, null, MediaStore.Images.Media.DATE_MODIFIED + " desc");
+        Cursor cursor = context.getContentResolver().query(externalContentUri, projections, null, null, null);
         if(cursor!=null) {
             saImages = new SparseArray<>(cursor.getCount());
             while (cursor.moveToNext()) {
@@ -88,15 +125,19 @@ public class AlbumUtil {
                 bean.setSize(size);
                 bean.setDisplayName(displayName);
                 bean.setMimeType(mimeType);
-                bean.setLastModified(getModifiedDate(dateModified));
+                bean.setDateModified(convertMediaModified(dateModified));
                 saImages.put(_id, bean);
             }
             cursor.close();
             setMediasThumbnail(context, saImages);
 
-            //TODO: for debug
+            list = new ArrayList<>(saImages.size());
             for(int i=0; i<saImages.size(); i++) {
-                ImageBean bean = (ImageBean)saImages.valueAt(i);
+                list.add(saImages.valueAt(i));
+            }
+            Collections.sort(list, new SortByModifiedDesc());
+            //TODO: for debug
+            for(MediaBean bean : list) {
                 if(!TextUtils.isEmpty(bean.getThumbnailData())) {
                     Log.d("getAllImages", "data = " + bean.getData());
                     Log.d("getAllImages", "thumbnail = " + bean.getThumbnailData());
@@ -104,11 +145,12 @@ public class AlbumUtil {
             }
 
         }
-        return saImages != null ? saImages : new SparseArray<MediaBean>();
+        return list;
     }
 
-    public static SparseArray<MediaBean> getAllVideos(Context context) {
-        SparseArray<MediaBean> saVideos = null;
+    public static List<MediaBean> getAllVideos(Context context) {
+        List<MediaBean> list = new ArrayList<>(0);
+        SparseArray<MediaBean> saVideos;
         Uri externalContentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String[] projections = {MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DATA,
@@ -119,7 +161,7 @@ public class AlbumUtil {
                 MediaStore.Video.Media.RESOLUTION,
                 MediaStore.Video.Media.DATE_MODIFIED
         };
-        Cursor cursor = context.getContentResolver().query(externalContentUri, projections, null, null, MediaStore.Video.Media.DATE_MODIFIED + " desc");
+        Cursor cursor = context.getContentResolver().query(externalContentUri, projections, null, null, null);
         if(cursor!=null) {
             saVideos = new SparseArray<>(cursor.getCount());
             while (cursor.moveToNext()) {
@@ -140,23 +182,28 @@ public class AlbumUtil {
                 bean.setMimeType(mimeType);
                 bean.setDuration(duration);
                 bean.setResolution(resolution);
-                bean.setLastModified(getModifiedDate(dateModified));
+                bean.setDateModified(convertMediaModified(dateModified));
                 saVideos.put(_id, bean);
             }
             cursor.close();
             setMediasThumbnail(context, saVideos);
+            list = new ArrayList<>(saVideos.size());
+            for(int i=0; i<saVideos.size(); i++) {
+                list.add(saVideos.valueAt(i));
+            }
+            Collections.sort(list, new SortByModifiedDesc());
 
             //TODO: for debug
-            for(int i=0; i<saVideos.size(); i++) {
-                VideoBean bean = (VideoBean)saVideos.valueAt(i);
+            for(MediaBean bean : list) {
                 if(!TextUtils.isEmpty(bean.getThumbnailData())) {
                     Log.d("getAllVideos", "data = " + bean.getData());
                     Log.d("getAllVideos", "thumbnail = " + bean.getThumbnailData());
-                    Log.d("getAllVideos", "duration = " + bean.getDuration());
+                    Log.d("getAllVideos", "duration = " + ((VideoBean)bean).getDuration());
+                    Log.d("getAllVideos", "resolution = " + ((VideoBean)bean).getResolution());
                 }
             }
         }
-        return saVideos != null ? saVideos : new SparseArray<MediaBean>();
+        return list;
     }
 
     private static void setMediasThumbnail(Context context, SparseArray<? extends MediaBean> medias) {
@@ -195,7 +242,7 @@ public class AlbumUtil {
      * @param modified Units are seconds since 1970.
      * @return
      */
-    private static Date getModifiedDate(String modified) {
+    private static Date convertMediaModified(String modified) {
         if(modified != null) {
             if(modified.length() == 10) { //Units are seconds since 1970.
                 return new Date(Long.parseLong(modified) * 1000);

@@ -6,9 +6,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="AlbumUtil.getAllFolders"
+        android:text="AlbumUtil.getAllMediasByFolder"
         android:textAllCaps="false"
-        android:onClick="onClickAlbumUtilGetAllFolder"/>
+        android:onClick="onClickAlbumUtilGetAllMediasByFolder"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
