@@ -4,14 +4,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by CongHao on 2017/10/6.
@@ -52,47 +55,50 @@ public class AlbumUtil {
         List<MediaBean> images = getAllImages(context);
         List<MediaBean> videos = getAllVideos(context);
 
-        List<MediaBean> list = new ArrayList<>(images.size() + videos.size());
-        list.addAll(images);
-        list.addAll(videos);
-        Collections.sort(list, new SortByModifiedDesc());
+        List<MediaBean> allMedias = new ArrayList<>(images.size() + videos.size());
+        allMedias.addAll(images);
+        allMedias.addAll(videos);
+        Collections.sort(allMedias, new SortMediaByModifiedDesc());
 
-        MediaFolderBean folderBeanAll = new MediaFolderBean();
-        folderBeanAll.setFolderName("图片和视频");
-        folderBeanAll.setMedias(list);
-        folderBeanAll.setType(MediaFolderBean.TYPE_MIX);
+        MediaFolderBean folderBeanAll = new MediaFolderBean("图片和视频", allMedias, MediaBean.CONTENT_TYPE_ALL);
         folders.add(folderBeanAll);
 
-        MediaFolderBean folderBeanVideo = new MediaFolderBean();
-        folderBeanVideo.setFolderName("图片和视频");
-        folderBeanVideo.setMedias(videos);
-        folderBeanVideo.setType(MediaFolderBean.TYPE_MIX);
-        folders.add(folderBeanAll);
+        MediaFolderBean folderBeanVideo = new MediaFolderBean("所有视频", videos, MediaBean.CONTENT_TYPE_VIDEO);
+        folders.add(folderBeanVideo);
 
-
+        folders.addAll(getMediasByFolder(images, MediaBean.CONTENT_TYPE_IMAGE));
 
         return folders;
-
     }
-    public static List<MediaBean> getAllMedias(Context context) {
-        List<MediaBean> images = getAllImages(context);
-        List<MediaBean> videos = getAllVideos(context);
-        List<MediaBean> list = new ArrayList<>(images.size() + videos.size());
-        list.addAll(images);
-        list.addAll(videos);
-        Collections.sort(list, new SortByModifiedDesc());
-/*
-        for(MediaBean bean : list) {
-            if(bean instanceof VideoBean) {
-                VideoBean videoBean = (VideoBean) bean;
-                Log.d("getAllMedias", "data = " + videoBean.getData());
-                Log.d("getAllMedias", "duration = " + videoBean.getDuration());
-                Log.d("getAllMedias", "resolution = " + videoBean.getResolution());
+    public static List<MediaFolderBean> getMediasByFolder(List<MediaBean> medias, int contentType) {
+        List<MediaFolderBean> folders = new ArrayList<>();
+
+        Map<String, List<MediaBean>> mapImages = new HashMap<>();
+        for(MediaBean mediaBean : medias) {
+            if(contentType == MediaBean.CONTENT_TYPE_ALL || mediaBean.getContentType() == contentType) {
+                String folderPath = mediaBean.getData().substring(0, mediaBean.getData().lastIndexOf(File.separator)+1);
+                if(mapImages.containsKey(folderPath)) {
+                    mapImages.get(folderPath).add(mediaBean);
+                } else {
+                    List<MediaBean> subList = new ArrayList<>();
+                    subList.add(mediaBean);
+                    mapImages.put(folderPath, subList);
+                }
             }
         }
-*/
-        return list;
+        Iterator<String> iterator = mapImages.keySet().iterator();
+        while (iterator.hasNext()) {
+            String folderPath = iterator.next();
+            File fileFolder = new File(folderPath);
+            if(fileFolder.exists() && fileFolder.isDirectory()) {
+                folders.add(new MediaFolderBean(null, fileFolder, mapImages.get(folderPath), contentType));
+            }
+        }
+
+        Collections.sort(folders, new SortFolderByModifiedDesc());
+        return folders;
     }
+
     public static List<MediaBean> getAllImages(Context context) {
         List<MediaBean> list = new ArrayList<>(0);
         SparseArray<MediaBean> saImages;
@@ -130,15 +136,7 @@ public class AlbumUtil {
             for(int i=0; i<saImages.size(); i++) {
                 list.add(saImages.valueAt(i));
             }
-            Collections.sort(list, new SortByModifiedDesc());
-            //TODO: for debug
-            for(MediaBean bean : list) {
-                if(!TextUtils.isEmpty(bean.getThumbnailData())) {
-                    Log.d("getAllImages", "data = " + bean.getData());
-                    Log.d("getAllImages", "thumbnail = " + bean.getThumbnailData());
-                }
-            }
-
+            Collections.sort(list, new SortMediaByModifiedDesc());
         }
         return list;
     }
@@ -186,23 +184,9 @@ public class AlbumUtil {
             for(int i=0; i<saVideos.size(); i++) {
                 list.add(saVideos.valueAt(i));
             }
-            Collections.sort(list, new SortByModifiedDesc());
-
-            //TODO: for debug
-            for(MediaBean bean : list) {
-                if(!TextUtils.isEmpty(bean.getThumbnailData())) {
-                    Log.d("getAllVideos", "data = " + bean.getData());
-                    Log.d("getAllVideos", "thumbnail = " + bean.getThumbnailData());
-                    Log.d("getAllVideos", "duration = " + ((VideoBean)bean).getDuration());
-                    Log.d("getAllVideos", "resolution = " + ((VideoBean)bean).getResolution());
-                }
-            }
+            Collections.sort(list, new SortMediaByModifiedDesc());
         }
         return list;
-    }
-
-    private static void setImages2Folder(List<MediaBean> ima) {
-
     }
 
     private static void setMediasThumbnail(Context context, SparseArray<? extends MediaBean> medias) {

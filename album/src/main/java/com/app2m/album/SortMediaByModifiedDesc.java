@@ -7,7 +7,7 @@ import java.util.Comparator;
  * E-mail: hao.cong@app2m.com
  */
 
-public class SortByModifiedDesc implements Comparator<MediaBean> {
+public class SortMediaByModifiedDesc implements Comparator<MediaBean> {
     @Override
     public int compare(MediaBean o1, MediaBean o2) {
         if(o1.getDateModified() == null && o2.getDateModified() == null) return 0;

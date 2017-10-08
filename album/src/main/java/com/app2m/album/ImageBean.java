@@ -9,4 +9,7 @@ import java.io.Serializable;
 
 public class ImageBean extends MediaBean implements Serializable {
 
+    public ImageBean() {
+        super(MediaBean.CONTENT_TYPE_IMAGE);
+    }
 }

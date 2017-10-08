@@ -9,16 +9,26 @@ import java.util.Date;
  */
 
 public class MediaBean implements Serializable {
+    public static final int CONTENT_TYPE_ALL = 0;
+    public static final int CONTENT_TYPE_IMAGE = 1;
+    public static final int CONTENT_TYPE_VIDEO = 2;
+
     private int id;
     private String data;
     private String thumbnailData;
     private String displayName;
+    private int contentType;
+
     /**
      * The size of the file in bytes
      */
     private int size;
     private String mimeType;
     private Date dateModified;
+
+    public MediaBean(int contentType) {
+        this.contentType = contentType;
+    }
 
     public int getId() {
         return id;
@@ -74,6 +84,10 @@ public class MediaBean implements Serializable {
 
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
+    }
+
+    public int getContentType() {
+        return contentType;
     }
 
     @Override

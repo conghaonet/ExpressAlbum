@@ -13,6 +13,10 @@ public class VideoBean extends MediaBean implements Serializable {
     private long duration;
     private String resolution;
 
+    public VideoBean() {
+        super(MediaBean.CONTENT_TYPE_VIDEO);
+    }
+
     public long getDuration() {
         return duration;
     }
@@ -28,4 +32,5 @@ public class VideoBean extends MediaBean implements Serializable {
     public void setResolution(String resolution) {
         this.resolution = resolution;
     }
+
 }
