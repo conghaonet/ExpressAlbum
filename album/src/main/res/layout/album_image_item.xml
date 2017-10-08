@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="model"
+            type="com.app2m.album.vm.MediaVM"/>
+        <variable
+            name="adapter"
+            type="com.app2m.album.adapter.MediaAdapter"/>
+    </data>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_default_thumbnail"
+            bind:mediaBean="@{model.mediaBean}"
+            android:background="#000000"
+            />
+    </RelativeLayout>
+</layout>

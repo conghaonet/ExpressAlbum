@@ -22,5 +22,11 @@
         android:textAllCaps="false"
         android:onClick="onClickAlbumUtiGetAllVideos"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ImagesGridActivity"
+        android:textAllCaps="false"
+        android:onClick="onClickImagesGridActivity"/>
 
 </LinearLayout>

@@ -6,9 +6,14 @@ import android.databinding.ViewDataBinding;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import com.app2m.album.AlbumUtil;
+import com.app2m.album.bean.MediaFolderBean;
 import com.app2m.samples.databinding.SampleActivityMainBinding;
 import com.app2m.samples.recyclerview.RecyclerViewExtActivity;
+
+import java.util.List;
 
 public class SampleMainActivity extends AppCompatActivity {
     private SampleActivityMainBinding mBinding;
@@ -26,4 +31,5 @@ public class SampleMainActivity extends AppCompatActivity {
     public void onClickSampleAlbum(View view) {
         startActivity(new Intent(this, SampleAlbumActivity.class));
     }
+
 }
