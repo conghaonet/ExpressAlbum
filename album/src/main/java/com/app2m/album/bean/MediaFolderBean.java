@@ -1,4 +1,4 @@
-package com.app2m.album;
+package com.app2m.album.bean;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

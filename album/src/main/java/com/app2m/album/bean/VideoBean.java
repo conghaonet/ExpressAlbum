@@ -1,6 +1,4 @@
-package com.app2m.album;
-
-import android.provider.MediaStore;
+package com.app2m.album.bean;
 
 import java.io.Serializable;
 

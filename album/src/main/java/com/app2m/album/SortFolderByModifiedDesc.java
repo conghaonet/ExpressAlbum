@@ -1,5 +1,7 @@
 package com.app2m.album;
 
+import com.app2m.album.bean.MediaFolderBean;
+
 import java.util.Comparator;
 
 /**

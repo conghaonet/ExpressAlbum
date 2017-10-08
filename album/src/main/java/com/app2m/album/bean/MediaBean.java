@@ -1,4 +1,4 @@
-package com.app2m.album;
+package com.app2m.album.bean;
 
 import java.io.Serializable;
 import java.util.Date;

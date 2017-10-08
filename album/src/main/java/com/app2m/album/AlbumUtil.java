@@ -7,6 +7,11 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.app2m.album.bean.ImageBean;
+import com.app2m.album.bean.MediaBean;
+import com.app2m.album.bean.MediaFolderBean;
+import com.app2m.album.bean.VideoBean;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
