@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <Button
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="activity"
+            type="com.app2m.samples.SampleAlbumActivity"/>
+    </data>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AlbumUtil.getAllMediasByFolder"
-        android:textAllCaps="false"
-        android:onClick="onClickAlbumUtilGetAllMediasByFolder"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AlbumUtil.getAllImages"
-        android:textAllCaps="false"
-        android:onClick="onClickAlbumUtiGetAllImages"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AlbumUtil.getAllVideos"
-        android:textAllCaps="false"
-        android:onClick="onClickAlbumUtiGetAllVideos"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AlbumUtil.getAllMediasByFolder"
+            android:textAllCaps="false"
+            android:onClick="@{(v) -> activity.onClickAlbumUtilGetAllMediasByFolder(v)}"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AlbumUtil.getAllImages"
+            android:textAllCaps="false"
+            android:onClick="@{(v) -> activity.onClickAlbumUtiGetAllImages(v)}"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AlbumUtil.getAllVideos"
+            android:textAllCaps="false"
+            android:onClick="@{(v) -> activity.onClickAlbumUtiGetAllVideos(v)}"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ImagesGridActivity"
-        android:textAllCaps="false"
-        android:onClick="onClickImagesGridActivity"/>
-
-</LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ImagesGridActivity"
+            android:textAllCaps="false"
+            android:onClick="@{(v) -> activity.onClickImagesGridActivity(v)}"/>
+    </LinearLayout>
+</layout>

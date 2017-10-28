@@ -4,10 +4,14 @@ android {
     dataBinding {
         enabled = true
     }
-
+    dexOptions {
+        javaMaxHeapSize "4g"
+        jumboMode true
+        maxProcessCount 8
+        preDexLibraries = true
+    }
     compileSdkVersion COMPILE_SDK_VERSION as Integer
     buildToolsVersion BUILD_TOOLS_VERSION
-
     defaultConfig {
         applicationId "com.app2m.samples.album"
         minSdkVersion MIN_SDK_VERSION as Integer
@@ -15,8 +19,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -25,16 +29,15 @@ android {
     }
 }
 
-
-
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':album')
+    compile ('com.android.support:multidex:1.0.2')
+    androidTestCompile 'com.android.support:multidex:1.0.2'
+    androidTestCompile 'com.android.support:multidex-instrumentation:1.0.2'
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':album')
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }
